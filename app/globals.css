@@ -2,26 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Override dark mode - we always want light mode for this prototype */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: light;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: var(--gl-color-background, #f5f8fc);
+  color: var(--gl-color-text, #2d3e52);
+  -webkit-font-smoothing: antialiased;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Ensure GL components render properly */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Custom scrollbar for sidebars */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--gl-color-gray-300, #bcc7d3);
+  border-radius: 3px;
+}
+
+/* Painter-specific styles */
+.chromosome-segment {
+  transition: opacity 0.15s ease, filter 0.15s ease;
+  cursor: pointer;
+}
+.chromosome-segment:hover {
+  filter: brightness(1.1);
+  z-index: 10;
+}
+.chromosome-segment--preview {
+  opacity: 0.5;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.3) 2px,
+    rgba(255,255,255,0.3) 4px
+  );
+}
+.chromosome-segment--dimmed {
+  opacity: 0.2;
+}
+.chromosome-segment--selected {
+  outline: 2px solid var(--gl-color-blue, #4582c9);
+  outline-offset: 1px;
+  z-index: 20;
+}
+
+/* Triangulation badge */
+.triangulation-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  z-index: 15;
+}
+
+/* Detail drawer slide-up */
+.detail-drawer {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: translateY(100%);
+  opacity: 0;
+}
+.detail-drawer--open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Group manager slide-in */
+.group-panel {
+  transition: transform 0.3s ease;
+  transform: translateX(100%);
+}
+.group-panel--open {
+  transform: translateX(0);
+}
+
+/* Tooltip styling override for painter */
+.painter-tooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  background: var(--gl-color-gray-950, #111d2e);
+  color: white;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  transform: translate(-50%, -100%);
+  margin-top: -8px;
+}
+.painter-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--gl-color-gray-950, #111d2e);
 }
